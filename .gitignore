@@ -57,3 +57,4 @@ workbox-*.js
 *.tmp
 *.temp
 .cache
+package-lock.json
