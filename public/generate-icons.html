@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Ícones PWA</title>
+</head>
+<body>
+    <h1>Gerador de Ícones PWA</h1>
+    <p>Clique nos botões abaixo para gerar e baixar os ícones:</p>
+    <button onclick="generateIcon(192)">Gerar Ícone 192x192</button>
+    <button onclick="generateIcon(512)">Gerar Ícone 512x512</button>
+
+    <script>
+        function generateIcon(size) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+
+            // Fundo com a cor primária do tema
+            ctx.fillStyle = '#2E3192';
+            ctx.fillRect(0, 0, size, size);
+
+            // Adiciona um círculo branco no centro
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const radius = size * 0.35;
+
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.fill();
+
+            // Adiciona um QR code estilizado (quadrados)
+            ctx.fillStyle = '#2E3192';
+            const qrSize = size * 0.5;
+            const qrX = (size - qrSize) / 2;
+            const qrY = (size - qrSize) / 2;
+            
+            const squareSize = qrSize / 5;
+            const gap = squareSize / 5;
+
+            // Desenha padrão de QR code simplificado
+            // Cantos
+            [0, 4].forEach(i => {
+                [0, 4].forEach(j => {
+                    ctx.fillRect(
+                        qrX + i * (squareSize + gap),
+                        qrY + j * (squareSize + gap),
+                        squareSize,
+                        squareSize
+                    );
+                });
+            });
+
+            // Centro
+            ctx.fillRect(
+                qrX + 2 * (squareSize + gap),
+                qrY + 2 * (squareSize + gap),
+                squareSize,
+                squareSize
+            );
+
+            // Alguns quadrados aleatórios para parecer QR code
+            [[1, 1], [1, 3], [3, 1], [2, 3], [3, 3]].forEach(([i, j]) => {
+                ctx.fillRect(
+                    qrX + i * (squareSize + gap),
+                    qrY + j * (squareSize + gap),
+                    squareSize * 0.6,
+                    squareSize * 0.6
+                );
+            });
+
+            // Converte para blob e faz download
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `pwa-${size}x${size}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 'image/png');
+        }
+    </script>
+</body>
+</html>
+

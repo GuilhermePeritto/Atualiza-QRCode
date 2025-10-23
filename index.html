@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#2E3192" />
+    <title>Atualiza QR Code</title>
+    <meta name="description" content="Sistema de leitura de QR Code para patrimonios da Atualiza Sistemas" />
+    <meta name="author" content="Atualiza Sistemas" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" id="favicon" href="/simbolo.png" type="image/png" />
+    <script>
+      // Define o favicon baseado no tema do navegador (apenas para navegador, não afeta o PWA)
+      (function() {
+        const favicon = document.getElementById('favicon');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        function updateFavicon(isDark) {
+          if (favicon) {
+            // Dark theme: simbolo-secundario.png, Light theme: simbolo.png
+            favicon.href = isDark ? '/simbolo-secundario.png' : '/simbolo.png';
+          }
+        }
+        
+        // Define favicon inicial
+        updateFavicon(prefersDark.matches);
+        
+        // Escuta mudanças no tema
+        prefersDark.addEventListener('change', (e) => {
+          updateFavicon(e.matches);
+        });
+      })();
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
