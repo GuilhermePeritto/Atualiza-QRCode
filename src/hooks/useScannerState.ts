@@ -11,7 +11,7 @@ export const useScannerState = () => {
 
   const handleScanSuccess = useCallback((qrCode: string) => {
     setIsScanning(false);
-    navigate(`/asset-details/${qrCode}`);
+    navigate(`/patrimonio/${qrCode}`);
   }, [navigate]);
 
   const startScanning = useCallback(() => {
@@ -26,7 +26,7 @@ export const useScannerState = () => {
     e.preventDefault();
     
     if (manualCode.trim()) {
-      navigate(`/asset-details/${manualCode.trim()}`);
+      navigate(`/patrimonio/${manualCode.trim()}`);
     }
   }, [manualCode, navigate]);
 

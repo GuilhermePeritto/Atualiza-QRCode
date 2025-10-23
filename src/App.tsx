@@ -16,8 +16,8 @@ const App = () => (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<SelectCompany />} />
-        <Route path="/scan" element={<ScanQRCode />} />
-        <Route path="/asset-details/:qrCode" element={<AssetDetails />} />
+        <Route path="/escanear" element={<ScanQRCode />} />
+        <Route path="/patrimonio/:qrCode" element={<AssetDetails />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

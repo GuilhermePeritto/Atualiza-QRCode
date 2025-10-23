@@ -15,7 +15,7 @@ const AssetDetails = () => {
   const { assetData, isLoading, error } = useAssetData(qrCode, selectedCompany?.code);
 
   const handleNewScan = () => {
-    navigate("/scan");
+    navigate("/escanear");
   };
 
   // Determina qual conteúdo renderizar

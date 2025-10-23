@@ -23,7 +23,7 @@ export const useCompanyAccess = () => {
       
       if (result.valid && result.company) {
         localStorage.setItem("selectedCompany", JSON.stringify(result.company));
-        navigate("/scan");
+        navigate("/escanear");
       } else {
         toast.error("Código de acesso inválido");
         setIsLoading(false);
