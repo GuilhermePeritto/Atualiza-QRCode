@@ -51,16 +51,16 @@ export const CompanyAccessForm = ({
               Não possuo código de acesso!
             </button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="sm:max-w-md max-w-[calc(100vw-2rem)]">
             <DialogHeader>
-              <DialogTitle>Como obter o código de acesso?</DialogTitle>
-              <DialogDescription className="space-y-3 pt-2">
-                <p>
+              <DialogTitle className="text-base sm:text-lg pr-6">Como obter o código de acesso?</DialogTitle>
+              <DialogDescription className="space-y-3 pt-2 text-left">
+                <p className="text-sm">
                   O código de acesso é gerado pelo administrador do sistema através do painel administrativo.
                 </p>
-                <div className="bg-muted p-4 rounded-lg">
-                  <p className="text-sm font-medium mb-2">Para gerar um código:</p>
-                  <ol className="text-sm space-y-1 list-decimal list-inside">
+                <div className="bg-muted p-3 sm:p-4 rounded-lg">
+                  <p className="text-xs sm:text-sm font-medium mb-2">Para gerar um código:</p>
+                  <ol className="text-xs sm:text-sm space-y-1 list-decimal list-inside">
                     <li>Acesse o painel administrativo</li>
                     <li>Vá em "Empresas"</li>
                     <li>Selecione sua empresa</li>

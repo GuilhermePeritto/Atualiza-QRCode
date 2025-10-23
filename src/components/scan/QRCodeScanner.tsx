@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { Camera, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface QRCodeScannerProps {
   onSuccess: (code: string) => void;
@@ -10,6 +11,7 @@ interface QRCodeScannerProps {
 
 export const QRCodeScanner = ({ onSuccess }: QRCodeScannerProps) => {
   const [permissionStatus, setPermissionStatus] = useState<"prompt" | "granted" | "denied" | "checking">("checking");
+  const [cameraLoading, setCameraLoading] = useState(true);
 
   useEffect(() => {
     let html5QrCode: any = null;
@@ -109,9 +111,17 @@ export const QRCodeScanner = ({ onSuccess }: QRCodeScannerProps) => {
             // Ignore scan errors
           }
         );
+        
+        // Aguarda um pouco para garantir que a câmera está totalmente carregada
+        setTimeout(() => {
+          if (isMounted) {
+            setCameraLoading(false);
+          }
+        }, 1000);
       } catch (err: any) {
         console.error("Scanner initialization error:", err);
         if (isMounted) {
+          setCameraLoading(false);
           if (err.name === "NotAllowedError") {
             setPermissionStatus("denied");
             toast.error("Permissão de câmera negada");
@@ -156,35 +166,37 @@ export const QRCodeScanner = ({ onSuccess }: QRCodeScannerProps) => {
 
   if (permissionStatus === "denied") {
     return (
-      <Alert variant="destructive" className="m-2 sm:m-4">
-        <AlertCircle className="h-4 w-4" />
-        <AlertDescription className="ml-2">
-          <div className="space-y-2 sm:space-y-3">
-            <p className="font-semibold text-sm">Permissão de câmera negada</p>
-            <p className="text-xs sm:text-sm">
-              Para usar o scanner de QR Code, você precisa permitir o acesso à câmera.
-            </p>
-            <div className="space-y-1.5 sm:space-y-2 text-xs">
-              <p className="font-medium">Como habilitar:</p>
-              <ol className="list-decimal list-inside space-y-0.5 sm:space-y-1">
-                <li>Toque no ícone de cadeado/informações na barra de endereço</li>
-                <li>Procure por "Câmera" ou "Permissões"</li>
-                <li>Altere para "Permitir"</li>
-                <li>Clique no botão abaixo para tentar novamente</li>
-              </ol>
+      <div className="w-full h-full flex items-center justify-center p-4">
+        <Alert variant="destructive" className="max-w-md">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="ml-2">
+            <div className="space-y-2 sm:space-y-3">
+              <p className="font-semibold text-sm">Permissão de câmera negada</p>
+              <p className="text-xs sm:text-sm">
+                Para usar o scanner de QR Code, você precisa permitir o acesso à câmera.
+              </p>
+              <div className="space-y-1.5 sm:space-y-2 text-xs">
+                <p className="font-medium">Como habilitar:</p>
+                <ol className="list-decimal list-inside space-y-0.5 sm:space-y-1">
+                  <li>Toque no ícone de cadeado/informações na barra de endereço</li>
+                  <li>Procure por "Câmera" ou "Permissões"</li>
+                  <li>Altere para "Permitir"</li>
+                  <li>Clique no botão abaixo para tentar novamente</li>
+                </ol>
+              </div>
+              <Button 
+                onClick={handleRetryPermission}
+                variant="outline"
+                size="sm"
+                className="w-full mt-1.5 sm:mt-2 h-8 sm:h-9"
+              >
+                <Camera className="mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                Tentar Novamente
+              </Button>
             </div>
-            <Button 
-              onClick={handleRetryPermission}
-              variant="outline"
-              size="sm"
-              className="w-full mt-1.5 sm:mt-2 h-8 sm:h-9"
-            >
-              <Camera className="mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              Tentar Novamente
-            </Button>
-          </div>
-        </AlertDescription>
-      </Alert>
+          </AlertDescription>
+        </Alert>
+      </div>
     );
   }
 
@@ -200,10 +212,27 @@ export const QRCodeScanner = ({ onSuccess }: QRCodeScannerProps) => {
   }
 
   return (
-    <div 
-      id="qr-reader" 
-      className="rounded-xl overflow-hidden border-4 border-secondary"
-    />
+    <div className="relative w-full h-full">
+      {cameraLoading && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-background rounded-xl">
+          <div className="w-full h-full flex flex-col items-center justify-center gap-3 p-4">
+            <Skeleton className="w-full aspect-square max-w-[280px] rounded-xl" />
+            <div className="text-center space-y-2">
+              <div className="flex items-center justify-center gap-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+                <p className="text-sm text-muted-foreground font-medium">Conectando à câmera...</p>
+              </div>
+              <p className="text-xs text-muted-foreground">Aguarde enquanto preparamos o scanner</p>
+            </div>
+          </div>
+        </div>
+      )}
+      <div 
+        id="qr-reader" 
+        className="rounded-xl overflow-hidden border-4 border-secondary"
+        style={{ opacity: cameraLoading ? 0 : 1, transition: 'opacity 0.3s ease-in-out' }}
+      />
+    </div>
   );
 };
 
